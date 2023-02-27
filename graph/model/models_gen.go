@@ -2,30 +2,40 @@
 
 package model
 
-type DeleteUser struct {
-	UserID string `json:"userId"`
+type Allergy struct {
+	ID           string  `json:"id"`
+	Name         string  `json:"name"`
+	Symptoms     string  `json:"symptoms"`
+	Severity     string  `json:"severity"`
+	Treatments   *string `json:"treatments"`
+	Notes        *string `json:"notes"`
+	AllergyImage *string `json:"allergyImage"`
+	IsActive     *bool   `json:"isActive"`
+	CreatedBy    string  `json:"createdBy"`
+	UpdatedBy    *string `json:"updatedBy"`
+	DeletedBy    *string `json:"deletedBy"`
 }
 
-type NewTodo struct {
-	Text   string `json:"text"`
-	UserID string `json:"userId"`
+type NewAllergy struct {
+	Name         string  `json:"name"`
+	Symptoms     string  `json:"symptoms"`
+	Severity     string  `json:"severity"`
+	Treatments   *string `json:"treatments"`
+	Notes        *string `json:"notes"`
+	AllergyImage *string `json:"allergyImage"`
+	IsActive     *bool   `json:"isActive"`
+	CreatedBy    string  `json:"createdBy"`
 }
 
 type NewUser struct {
-	UserID    string `json:"userId"`
-	FirstName string `json:"firstName"`
-	LastName  string `json:"lastName"`
-}
-
-type Todo struct {
-	ID   string `json:"id"`
-	Text string `json:"text"`
-	Done bool   `json:"done"`
-	User *User  `json:"user"`
+	Email    string `json:"email"`
+	FullName string `json:"fullName"`
+	Password string `json:"password"`
 }
 
 type User struct {
-	ID        string `json:"id"`
-	FirstName string `json:"firstName"`
-	LastName  string `json:"lastName"`
+	ID       string `json:"id"`
+	Email    string `json:"email"`
+	FullName string `json:"fullName"`
+	Password string `json:"password"`
 }

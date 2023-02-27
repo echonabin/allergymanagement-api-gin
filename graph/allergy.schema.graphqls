@@ -1,0 +1,32 @@
+type Allergy {
+  id: ID!
+  name: String!
+  symptoms: String!
+  severity: String!
+  treatments: String
+  notes: String
+  allergyImage: String
+  isActive: Boolean
+  createdBy: ID!
+  updatedBy: ID
+  deletedBy: ID
+}
+
+extend type Query {
+  allergy(id: String): [Allergy!]!
+}
+
+input NewAllergy {
+  name: String!
+  symptoms: String!
+  severity: String!
+  treatments: String
+  notes: String
+  allergyImage: String
+  isActive: Boolean
+  createdBy: ID!
+}
+
+extend type Mutation {
+  createAllergy(input: NewAllergy!): Allergy!
+}
