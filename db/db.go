@@ -8,14 +8,14 @@ import (
 	"gorm.io/gorm"
 )
 
-var DB *gorm.DB
+var Model *gorm.DB
 
 func ConnectDatabase() {
 	var err error
 	DbEnvVariables := configs.DbEnvConfig
 
 	dsn := stringUtil.CreateFormattedString("host=%s user=%s password=%s dbname=%s port=%s", DbEnvVariables.DbHost, DbEnvVariables.DbUser, DbEnvVariables.DbPassword, DbEnvVariables.DbName, DbEnvVariables.DbPort)
-	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	Model, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if err != nil {
 		logUtils.Error(err, "Error connecting to database: ")

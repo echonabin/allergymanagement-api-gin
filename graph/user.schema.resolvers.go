@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"math/rand"
 
+	"github.com/echonabin/allergymanagement-api/db"
 	"github.com/echonabin/allergymanagement-api/graph/model"
 )
 
@@ -20,15 +21,30 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) 
 		FullName: input.FullName,
 		Password: input.Password,
 	}
+	db := db.Model
+
+	result := db.Create(&user)
+
+	if result.Error != nil {
+		panic("Error while creating user")
+	}
+
 	r.user = append(r.user, user)
 	return user, nil
 }
 
 // Users is the resolver for the users field.
 func (r *queryResolver) Users(ctx context.Context, id *string) ([]*model.User, error) {
-	if id != nil {
-		fmt.Println(r.user)
+	user := []*model.User{}
+	db := db.Model
+
+	if id == nil {
 		return r.user, nil
 	}
-	return r.user, nil
+
+	if err := db.First(&user, "id=?", *id).Error; err != nil {
+		return nil, err
+	} else {
+		return user, nil
+	}
 }
