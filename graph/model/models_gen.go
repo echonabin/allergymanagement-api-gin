@@ -33,6 +33,11 @@ type NewUser struct {
 	Password string `json:"password"`
 }
 
+type UpdateUser struct {
+	Email    *string `json:"email"`
+	FullName *string `json:"fullName"`
+}
+
 type User struct {
 	ID       string `json:"id"`
 	Email    string `json:"email"`

@@ -15,36 +15,84 @@ import (
 
 // CreateUser is the resolver for the createUser field.
 func (r *mutationResolver) CreateUser(ctx context.Context, input model.NewUser) (*model.User, error) {
+	db := db.Model
+
 	user := &model.User{
 		ID:       fmt.Sprintf("T%d", rand.Int()),
 		Email:    input.Email,
 		FullName: input.FullName,
 		Password: input.Password,
 	}
-	db := db.Model
 
-	result := db.Create(&user)
-
-	if result.Error != nil {
-		panic("Error while creating user")
+	if err := db.Create(&user).Error; err != nil {
+		return nil, err
 	}
 
 	r.user = append(r.user, user)
 	return user, nil
 }
 
+// UpdateUser is the resolver for the updateUser field.
+func (r *mutationResolver) UpdateUser(ctx context.Context, id *string, input model.UpdateUser) (*model.User, error) {
+	db := db.Model
+	data := make(map[string]interface{})
+	User := &model.User{}
+
+	if input.Email != nil {
+		data["email"] = *input.Email
+	}
+
+	if input.FullName != nil {
+		data["full_name"] = *input.FullName
+	}
+
+	if err := db.Model(&User).Where("id = ?", *id).Updates(data).Error; err != nil {
+		return nil, err
+	}
+
+	return User, nil
+}
+
+// DeleteUser is the resolver for the deleteUser field.
+func (r *mutationResolver) DeleteUser(ctx context.Context, id *string) (*model.User, error) {
+	db := db.Model
+	User := &model.User{}
+
+	result := db.Where("id = ?", *id).Delete(&User)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return nil, fmt.Errorf("no user with ID %s found", *id)
+	}
+
+	msg := fmt.Sprintf("User with id %s has been deleted", *id)
+
+	return User, fmt.Errorf(msg)
+}
+
 // Users is the resolver for the users field.
-func (r *queryResolver) Users(ctx context.Context, id *string) ([]*model.User, error) {
+func (r *queryResolver) Users(ctx context.Context, id *string, page *int, limit *int) ([]*model.User, error) {
+	DEFAULT_LIMIT := 20
+
 	user := []*model.User{}
 	db := db.Model
 
+	if limit == nil {
+		limit = &DEFAULT_LIMIT
+	}
+
 	if id == nil {
-		return r.user, nil
+		if err := db.Limit(*limit).Find(&user).Error; err != nil {
+			return nil, err
+		}
+		return user, nil
 	}
 
 	if err := db.First(&user, "id=?", *id).Error; err != nil {
 		return nil, err
-	} else {
-		return user, nil
 	}
+	return user, nil
 }

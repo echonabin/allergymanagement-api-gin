@@ -6,7 +6,7 @@ type User {
 }
 
 extend type Query {
-  users(id: String): [User!]!
+  users(id: String, page: Int, limit: Int): [User!]!
 }
 
 input NewUser {
@@ -15,6 +15,13 @@ input NewUser {
   password: String!
 }
 
+input UpdateUser {
+  email: String
+  fullName: String
+}
+
 extend type Mutation {
   createUser(input: NewUser!): User!
+  updateUser(id: String, input: UpdateUser!): User!
+  deleteUser(id: String): User!
 }

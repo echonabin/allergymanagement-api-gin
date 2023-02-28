@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -22,7 +21,6 @@ func init() {
 }
 
 func main() {
-	fmt.Println("been here ==========================>")
 	r := gin.Default()
 
 	r.Use(func(ctx *gin.Context) {
